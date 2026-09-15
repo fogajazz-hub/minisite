@@ -1,0 +1,1261 @@
+<!DOCTYPE html>
+<html lang="it" class="h-full bg-slate-50">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FIUUMM TATAAM! - Didattica Musicale & AI Studio</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#f0f4f9',
+                            100: '#dce5f1',
+                            500: '#2e5b88',
+                            600: '#23476d',
+                            700: '#1e3a58',
+                            800: '#172e47',
+                        },
+                        accent: {
+                            500: '#e06d53',
+                            600: '#c8563d',
+                        },
+                        warm: {
+                            400: '#f4a261',
+                            500: '#e76f51',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+    </style>
+</head>
+<body class="h-full text-slate-800 flex flex-col font-sans antialiased bg-slate-50">
+
+    <!-- NAVIGATION HEADER -->
+    <header class="bg-brand-700 text-white shadow-md sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <!-- Brand Title -->
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 rounded-xl bg-accent-500 flex items-center justify-center text-white font-extrabold text-xl shadow-inner">
+                        🥁
+                    </div>
+                    <div>
+                        <h1 class="text-xl font-extrabold tracking-tight">FIUUMM TATAAM!</h1>
+                        <p class="text-xs text-brand-100 hidden sm:block">Didattica Musicale, Percussioni ed Improvvisazione | AI Studio</p>
+                    </div>
+                </div>
+
+                <!-- Navigation Tabs -->
+                <nav class="flex space-x-1 sm:space-x-2 text-xs sm:text-sm overflow-x-auto custom-scrollbar py-2">
+                    <button onclick="switchTab('presentation')" id="tab-btn-presentation" class="tab-btn active-tab px-3 py-2 rounded-lg font-medium transition-all flex items-center space-x-2 bg-brand-800 text-white border border-brand-500">
+                        <i class="fa-solid fa-book-open"></i>
+                        <span class="whitespace-nowrap">Progetto Integrale</span>
+                    </button>
+                    <button onclick="switchTab('ai-lesson')" id="tab-btn-ai-lesson" class="tab-btn px-3 py-2 rounded-lg font-medium text-brand-100 hover:text-white hover:bg-brand-600 transition-all flex items-center space-x-2">
+                        <i class="fa-solid fa-wand-magic-sparkles text-amber-300"></i>
+                        <span class="whitespace-nowrap">AI Lezioni</span>
+                    </button>
+                    <button onclick="switchTab('ai-story')" id="tab-btn-ai-story" class="tab-btn px-3 py-2 rounded-lg font-medium text-brand-100 hover:text-white hover:bg-brand-600 transition-all flex items-center space-x-2">
+                        <i class="fa-solid fa-volume-high text-emerald-300"></i>
+                        <span class="whitespace-nowrap">Storie & TTS</span>
+                    </button>
+                    <button onclick="switchTab('ai-score')" id="tab-btn-ai-score" class="tab-btn px-3 py-2 rounded-lg font-medium text-brand-100 hover:text-white hover:bg-brand-600 transition-all flex items-center space-x-2">
+                        <i class="fa-solid fa-icons text-pink-300"></i>
+                        <span class="whitespace-nowrap">Grafia AI</span>
+                    </button>
+                    <button onclick="switchTab('virtual-pads')" id="tab-btn-virtual-pads" class="tab-btn px-3 py-2 rounded-lg font-medium text-brand-100 hover:text-white hover:bg-brand-600 transition-all flex items-center space-x-2">
+                        <i class="fa-solid fa-drum text-accent-500"></i>
+                        <span class="whitespace-nowrap">Console Drum</span>
+                    </button>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
+
+        <!-- GLOBAL ALERT / MESSAGE BOX -->
+        <div id="message-box" class="hidden mb-6 p-4 rounded-xl shadow-md border flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <i id="message-icon" class="fa-solid text-xl"></i>
+                <span id="message-text" class="text-sm font-medium"></span>
+            </div>
+            <button onclick="closeMessageBox()" class="text-slate-400 hover:text-slate-600">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>
+
+        <!-- ========================================== -->
+        <!-- TAB 1: PRESENTAZIONE ISTITUZIONALE PROGETTO INTEGRALE -->
+        <!-- ========================================== -->
+        <section id="tab-presentation" class="tab-content block space-y-8">
+
+            <!-- Hero Section -->
+            <div class="bg-gradient-to-br from-brand-700 via-brand-500 to-indigo-900 text-white rounded-2xl p-6 sm:p-10 shadow-xl relative overflow-hidden border border-brand-500">
+                <div class="absolute -right-10 -bottom-10 w-64 h-64 bg-white/5 rounded-full blur-2xl pointer-events-none"></div>
+                <div class="relative z-10 max-w-3xl">
+                    <span class="inline-block bg-accent-500 text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider mb-4 shadow">
+                        Istituto Comprensivo "G. Carducci" – Plesso Via Cavour
+                    </span>
+                    <h2 class="text-3xl sm:text-5xl font-extrabold tracking-tight mb-3">FIUUMM TATAAM!</h2>
+                    <p class="text-lg sm:text-xl text-brand-100 font-light leading-relaxed mb-4">
+                        Il Suono delle Mani, la Forza del Ritmo | Tamburi, Percussioni ed Improvvisazione per la Scuola Primaria
+                    </p>
+                    <div class="p-3 bg-white/10 rounded-xl border border-white/15 backdrop-blur-sm text-xs sm:text-sm text-amber-200 font-light italic mb-6">
+                        “Si impara la musica facendo musica, non parlandone.” — Il tamburo come voce, il gesto come linguaggio.
+                    </div>
+                    <div class="flex flex-wrap gap-4 text-xs sm:text-sm text-brand-100 border-t border-white/20 pt-4">
+                        <div class="flex items-center space-x-2">
+                            <i class="fa-solid fa-user-gear text-warm-400"></i>
+                            <span><strong>Docente Referente:</strong> Prof. Fabrizio Fogagnolo</span>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <i class="fa-solid fa-music text-warm-400"></i>
+                            <span><strong>Ambito:</strong> Poliritmia & Didattica Audiotattile</span>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <i class="fa-solid fa-award text-warm-400"></i>
+                            <span><strong>Quadro:</strong> IJVAS / MIM Piano delle Arti</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Key Highlights Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm hover:shadow-md transition-shadow border-t-4 border-t-brand-500">
+                    <div class="w-10 h-10 rounded-lg bg-brand-50 text-brand-500 flex items-center justify-center text-xl mb-3">
+                        <i class="fa-solid fa-drum"></i>
+                    </div>
+                    <h3 class="font-bold text-slate-800 text-base mb-1">Costo Zero Strumenti</h3>
+                    <p class="text-xs text-slate-600 leading-relaxed">Tutti gli strumenti acustici (rullanti, tom, timpani, djembé, cajón, percussioni) sono forniti direttamente dal docente senza alcuna spesa per scuola o famiglie.</p>
+                </div>
+
+                <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm hover:shadow-md transition-shadow border-t-4 border-t-accent-500">
+                    <div class="w-10 h-10 rounded-lg bg-red-50 text-accent-500 flex items-center justify-center text-xl mb-3">
+                        <i class="fa-solid fa-child"></i>
+                    </div>
+                    <h3 class="font-bold text-slate-800 text-base mb-1">Bambini al Centro</h3>
+                    <p class="text-xs text-slate-600 leading-relaxed">Didattica esperienziale e attiva: i bambini suonano dal primo minuto con il corpo e lo strumento reale, senza passare dal solfeggio astratto.</p>
+                </div>
+
+                <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm hover:shadow-md transition-shadow border-t-4 border-t-warm-400">
+                    <div class="w-10 h-10 rounded-lg bg-amber-50 text-warm-400 flex items-center justify-center text-xl mb-3">
+                        <i class="fa-solid fa-clock"></i>
+                    </div>
+                    <h3 class="font-bold text-slate-800 text-base mb-1">Flessibilità Oraria</h3>
+                    <p class="text-xs text-slate-600 leading-relaxed">Due formule orarie opzionali nel PTOF: <strong>Modulo A (12 Ore)</strong> oppure <strong>Modulo B (18 Ore)</strong> per ciascuna classe a cadenza settimanale.</p>
+                </div>
+
+                <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm hover:shadow-md transition-shadow border-t-4 border-t-indigo-500">
+                    <div class="w-10 h-10 rounded-lg bg-indigo-50 text-indigo-500 flex items-center justify-center text-xl mb-3">
+                        <i class="fa-solid fa-hand-holding-heart"></i>
+                    </div>
+                    <h3 class="font-bold text-slate-800 text-base mb-1">Inclusione Reale</h3>
+                    <p class="text-xs text-slate-600 leading-relaxed">Linguaggio corporeo, ritmico e non verbale privo di barriere notazionali o linguistiche. Ideale per alunni BES, DSA e N.A.I.</p>
+                </div>
+            </div>
+
+            <!-- 1. L'ALUNNO AL CENTRO DELL'ATTO SONORO E IL VALORE DEL "FARE" -->
+            <div class="bg-white rounded-xl p-6 sm:p-8 border border-slate-200 shadow-sm space-y-4">
+                <div class="flex items-center space-x-3 text-brand-700 font-bold text-xl border-b border-slate-100 pb-3">
+                    <i class="fa-solid fa-compact-disc text-accent-500"></i>
+                    <span>1. L'Alunno al Centro dell'Atto Sonoro e il Valore del "Fare"</span>
+                </div>
+                
+                <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">
+                    Il progetto <strong>FIUUMM TATAAM!</strong> nasce da un presupposto pedagogico irrinunciabile e ampiamente condiviso dalla ricerca contemporanea: <strong>la musica si apprende facendola ed esperendola in prima persona</strong>. I bambini e le bambine non vengono collocati nella posizione di spettatori o fruitori passivi di concetti teorici astratti, né vengono appesantiti da nozioni di solfeggio tradizionale a prima vista che rischiano di distanziare gli alunni dal piacere spontaneo dell'espressione musicale.
+                </p>
+
+                <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">
+                    Al contrario, l'alunno si posiziona costantemente al centro dell'atto sonoro. Attraverso l'uso del proprio corpo (<em>body percussion</em>, gesto, respiro), della voce (filastrocche, sonorizzazioni, vocalizzi espressivi) e di un laboratorio itinerante di tamburi e percussioni reali suonate anche con bacchette e battenti, ciascun gruppo classe si trasforma in una vera e propria <strong>comunità ritmica</strong>. In questo ambiente protetto e stimolante, l'atto musicale diventa un potente canale di esplorazione sensoriale, autostima e crescita personale.
+                </p>
+
+                <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">
+                    Il "fare musica" costituisce già di per sé un "sapere": il bambino esplora, scopre, tenta, sbaglia, corregge in tempo reale e condivide con i compagni l'emozione della creazione estemporanea. La musica si rivela così un linguaggio plastico, vivo ed immediato, perfettamente aderente alla naturale curiosità dell'infanzia.
+                </p>
+            </div>
+
+            <!-- SUPPORTO SERENO PER LE MAESTRE DI CLASSE & GLOSSARIO -->
+            <div class="bg-gradient-to-br from-amber-50 via-orange-50 to-amber-100 border-2 border-dashed border-warm-400 rounded-2xl p-6 sm:p-8 space-y-4 shadow-sm">
+                <div class="flex items-start space-x-4">
+                    <div class="w-12 h-12 rounded-xl bg-warm-500 text-white flex items-center justify-center text-2xl shrink-0 shadow-md">
+                        <i class="fa-solid fa-apple-whole"></i>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-brand-800 text-base sm:text-lg">Una Nota e un Supporto Sereno per le Maestre di Classe</h4>
+                        <p class="text-xs sm:text-sm text-slate-700 mt-1 leading-relaxed">
+                            <strong>Le maestre di classe non devono possedere alcuna competenza teorica o tecnica in campo musicale.</strong> Il laboratorio è interamente condotto dall'esperto ed è progettato per integrare le insegnanti in modo del tutto rilassato, favorendo l'osservazione delle dinamiche relazionali degli alunni da una prospettiva differente e privilegiata.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="border-t border-warm-400/40 pt-4">
+                    <h5 class="font-bold text-brand-700 text-xs sm:text-sm mb-3">Glossario orientativo essenziale per le Insegnanti:</h5>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3">
+                        <div class="bg-white/80 backdrop-blur-sm p-3 rounded-lg border border-amber-200 text-xs">
+                            <strong class="text-brand-700 block mb-1">Pulsazione:</strong>
+                            <span>Il “battito” cardiaco e costante della musica su cui si appoggia il tempo comune del gruppo.</span>
+                        </div>
+                        <div class="bg-white/80 backdrop-blur-sm p-3 rounded-lg border border-amber-200 text-xs">
+                            <strong class="text-brand-700 block mb-1">Pattern Ritmico:</strong>
+                            <span>Una breve sequenza sonora o frase che si ripete e si incastra con gli altri strumenti.</span>
+                        </div>
+                        <div class="bg-white/80 backdrop-blur-sm p-3 rounded-lg border border-amber-200 text-xs">
+                            <strong class="text-brand-700 block mb-1">Call & Response:</strong>
+                            <span>Struttura a "botta e risposta" in cui un solista propone un motivo e il gruppo risponde o imita.</span>
+                        </div>
+                        <div class="bg-white/80 backdrop-blur-sm p-3 rounded-lg border border-amber-200 text-xs">
+                            <strong class="text-brand-700 block mb-1">Improvvisazione Guidata:</strong>
+                            <span>Invenzione estemporanea in un quadro protetto da regole semplici (es. "solo suoni leggeri", "a coppie").</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="p-3 bg-white/90 rounded-lg border border-amber-300 text-xs text-slate-700 leading-relaxed">
+                    <strong>Cosa osservare in classe durante i laboratori:</strong> Come i bambini più timidi o con fragilità linguistiche trovano nel ritmo e nel gesto un canale spontaneo senza passare dalla parola; come l'ensemble allena l'ascolto reciproco e l'attesa del proprio turno; come la ripetizione settimanale arricchisce la sicurezza emotiva del gruppo.
+                </div>
+            </div>
+
+            <!-- 2. IMPROVVISAZIONE E METODOLOGIE CONTEMPORANEE -->
+            <div class="bg-white rounded-xl p-6 sm:p-8 border border-slate-200 shadow-sm space-y-4">
+                <div class="flex items-center space-x-3 text-brand-700 font-bold text-xl border-b border-slate-100 pb-3">
+                    <i class="fa-solid fa-graduation-cap text-brand-500"></i>
+                    <span>2. Improvvisazione e Quadro Pedagogico Contemporaneo</span>
+                </div>
+                
+                <div class="p-4 bg-amber-50/70 border-l-4 border-warm-400 rounded-r-lg italic text-slate-700 text-xs sm:text-sm">
+                    “L'improvvisazione non è suonare senza regole, ma un processo simbolico ed evolutivo: una pratica che innesca quei processi capacitanti in grado di abilitare i capisaldi della comunità: l'empatia, l'ascolto, il rispetto dei turni e la trasformazione dell'imprevisto in opportunità.”
+                </div>
+
+                <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">
+                    Il progetto <strong>FIUUMM TATAAM!</strong> si inserisce nel solco delle metodologie più avanzate di educazione musicale promosse dall'Associazione Nazionale <strong>Il Jazz Va a Scuola (IJVAS)</strong>, soggetto accreditato presso il <strong>Ministero dell'Istruzione e del Merito (MIM - Piano delle Arti)</strong>. L'improvvisazione musicale agisce da straordinario collante didattico, emotivo e relazionale.
+                </p>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
+                    <div class="bg-slate-50 p-4 rounded-lg border border-slate-200">
+                        <h4 class="font-semibold text-brand-700 text-sm mb-1">2.1 Cognitività Audiotattile (Prof. V. Caporaletti)</h4>
+                        <p class="text-xs text-slate-600 leading-relaxed">In linea con la Teoria delle Musiche Audiotattili, il bambino apprende la musica partendo dalla razionalità psico-corporea. Attraverso <em>body percussion</em>, gesto e strumenti reali suonati con bacchette, la classe è subito una comunità ritmica orientata dall'azione diretta.</p>
+                    </div>
+                    <div class="bg-slate-50 p-4 rounded-lg border border-slate-200">
+                        <h4 class="font-semibold text-brand-700 text-sm mb-1">2.2 Capability Approach (Amartya Sen)</h4>
+                        <p class="text-xs text-slate-600 leading-relaxed">L'improvvisazione agisce come dispositivo capacitante per accogliere la vulnerabilità, trasformare l'errore in variazione e promuovere il rispetto del ritmo dialogico (<em>interplay</em>), offrendo pari dignità espressiva ad alunni BES, DSA e N.A.I.</p>
+                    </div>
+                </div>
+
+                <!-- Method Badges -->
+                <div class="flex flex-wrap gap-2 pt-2">
+                    <span class="px-3 py-1 bg-brand-50 text-brand-700 text-xs font-semibold rounded-full border border-brand-100">Cognitività Audiotattile</span>
+                    <span class="px-3 py-1 bg-brand-50 text-brand-700 text-xs font-semibold rounded-full border border-brand-100">Capability Approach</span>
+                    <span class="px-3 py-1 bg-brand-50 text-brand-700 text-xs font-semibold rounded-full border border-brand-100">Orff-Schulwerk</span>
+                    <span class="px-3 py-1 bg-brand-50 text-brand-700 text-xs font-semibold rounded-full border border-brand-100">Ritmica Dalcroze</span>
+                    <span class="px-3 py-1 bg-brand-50 text-brand-700 text-xs font-semibold rounded-full border border-brand-100">Pedagogia Jazz (IJVAS)</span>
+                    <span class="px-3 py-1 bg-brand-50 text-brand-700 text-xs font-semibold rounded-full border border-brand-100">Sound Painting & Chironomia</span>
+                    <span class="px-3 py-1 bg-brand-50 text-brand-700 text-xs font-semibold rounded-full border border-brand-100">Didattica per Competenze</span>
+                </div>
+            </div>
+
+            <!-- 3. STRUMENTARIO REALE FORNITO A COSTO ZERO -->
+            <div class="bg-white rounded-xl p-6 sm:p-8 border border-slate-200 shadow-sm space-y-4">
+                <div class="flex items-center space-x-3 text-brand-700 font-bold text-xl border-b border-slate-100 pb-3">
+                    <i class="fa-solid fa-toolbox text-amber-500"></i>
+                    <span>3. Uno Strumentario Ricco, Variegato e a Costo Zero</span>
+                </div>
+                
+                <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">
+                    Per la realizzazione dei laboratori <strong>la scuola e le famiglie non dovranno acquistare alcun tipo di strumento o materiale musicale</strong>. Il docente porta direttamente presso la sede di Via Cavour un parco strumenti completo e professionale:
+                </p>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 pt-2">
+                    <div class="bg-amber-50/60 p-4 rounded-xl border border-amber-200/80 space-y-2">
+                        <div class="text-2xl text-amber-600"><i class="fa-solid fa-drum"></i></div>
+                        <h4 class="font-bold text-brand-800 text-sm">Tamburi Acustici e Batteria</h4>
+                        <ul class="text-xs text-slate-600 space-y-1 list-disc list-inside">
+                            <li>Rullanti (<em>snare drum</em>)</li>
+                            <li>Tom di varie dimensioni e Timpani</li>
+                            <li>Djembé tradizionali ed afrocubani</li>
+                            <li>Cajón peruviani</li>
+                            <li>Bongos e Tamburi a cornice</li>
+                        </ul>
+                    </div>
+
+                    <div class="bg-emerald-50/60 p-4 rounded-xl border border-emerald-200/80 space-y-2">
+                        <div class="text-2xl text-emerald-600"><i class="fa-solid fa-bell"></i></div>
+                        <h4 class="font-bold text-brand-800 text-sm">Percussioni Timbriche e Accessori</h4>
+                        <ul class="text-xs text-slate-600 space-y-1 list-disc list-inside">
+                            <li>Claves in legno e Wood block</li>
+                            <li>Shaker, Maracas e Guiro</li>
+                            <li>Campanacci e piastre risonanti</li>
+                            <li>Metallofoni e piastrelle sonore</li>
+                            <li>Piatti sospesi per effetti evocativi</li>
+                        </ul>
+                    </div>
+
+                    <div class="bg-indigo-50/60 p-4 rounded-xl border border-indigo-200/80 space-y-2">
+                        <div class="text-2xl text-indigo-600"><i class="fa-solid fa-hands-clapping"></i></div>
+                        <h4 class="font-bold text-brand-800 text-sm">Body Percussion & Voce</h4>
+                        <ul class="text-xs text-slate-600 space-y-1 list-disc list-inside">
+                            <li>Uso espressivo del corpo e fonemi</li>
+                            <li>Battitori speciali e bacchette dedicate</li>
+                            <li>Controllo del colpo e del rimbalzo</li>
+                            <li>Giochi ritmici respiratori</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 4. TABELLA RIPARTIZIONE ORARIA PTOF -->
+            <div class="bg-white rounded-xl p-6 sm:p-8 border border-slate-200 shadow-sm space-y-4">
+                <div class="flex items-center space-x-3 text-brand-700 font-bold text-xl border-b border-slate-100 pb-3">
+                    <i class="fa-solid fa-table-list text-warm-400"></i>
+                    <span>4. Opzioni di Modulo PTOF (Monte Ore per Classe)</span>
+                </div>
+                
+                <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">
+                    Al fine di garantire la massima flessibilità ed adattarsi al PTOF dell'Istituto Comprensivo "G. Carducci", il progetto viene proposto in due formule orarie opzionali a cadenza settimanale per ogni singola classe:
+                </p>
+
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse text-xs sm:text-sm">
+                        <thead>
+                            <tr class="bg-brand-700 text-white">
+                                <th class="p-3 rounded-tl-lg">Fasi del Laboratorio Didattico</th>
+                                <th class="p-3">Modulo A (12 ORE / Classe)</th>
+                                <th class="p-3 rounded-tr-lg">Modulo B (18 ORE / Classe)</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-200 text-slate-700">
+                            <tr class="hover:bg-slate-50">
+                                <td class="p-3 font-medium">
+                                    <strong>Fase 1: Accoglienza, Corpo & Esplorazione Timbrica</strong><br>
+                                    <span class="text-[11px] text-slate-500">Body percussion, uso delle bacchette, gesti ritmici ed esplorazione dei tamburi</span>
+                                </td>
+                                <td class="p-3">3 Ore</td>
+                                <td class="p-3">4 Ore</td>
+                            </tr>
+                            <tr class="hover:bg-slate-50">
+                                <td class="p-3 font-medium">
+                                    <strong>Fase 2: Improvvisazione, Interplay & Sound Painting</strong><br>
+                                    <span class="text-[11px] text-slate-500">Dialoghi sonori botta-risposta, cerchio ritmico, conduzione gestuale con il Sound Painting</span>
+                                </td>
+                                <td class="p-3">6 Ore</td>
+                                <td class="p-3">9 Ore</td>
+                            </tr>
+                            <tr class="hover:bg-slate-50">
+                                <td class="p-3 font-medium">
+                                    <strong>Fase 3: Strutturazione Formale & Restituzione Finale</strong><br>
+                                    <span class="text-[11px] text-slate-500">Montaggio del materiale inventato dai bambini e preparazione della performance/mostra</span>
+                                </td>
+                                <td class="p-3">3 Ore</td>
+                                <td class="p-3">5 Ore</td>
+                            </tr>
+                            <tr class="bg-brand-50 font-bold text-brand-700">
+                                <td class="p-3">MONTE ORE TOTALE DEDICATO A OGNI CLASSE</td>
+                                <td class="p-3">12 ORE (settimanali)</td>
+                                <td class="p-3">18 ORE (settimanali)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- 5. PERCORSO PROGRESSIVO 1ª-5ª CLASSE -->
+            <div class="bg-white rounded-xl p-6 sm:p-8 border border-slate-200 shadow-sm space-y-6">
+                <div class="flex items-center space-x-3 text-brand-700 font-bold text-xl border-b border-slate-100 pb-3">
+                    <i class="fa-solid fa-layer-group text-brand-500"></i>
+                    <span>5. Percorso Progressivo per Macro-Aree (1ª - 5ª Classe)</span>
+                </div>
+
+                <div class="space-y-4">
+                    <!-- Classe 1 -->
+                    <div class="flex flex-col sm:flex-row bg-slate-50 rounded-xl border border-slate-200 overflow-hidden shadow-sm">
+                        <div class="bg-brand-500 text-white font-extrabold text-2xl p-4 flex flex-col items-center justify-center sm:w-28 text-center shrink-0">
+                            <span>1ª</span>
+                            <span class="text-xs font-normal uppercase">Classe</span>
+                        </div>
+                        <div class="p-4 flex-1">
+                            <h4 class="font-bold text-brand-700 text-base">Percezione, Corporeità e Voce Espressiva</h4>
+                            <p class="text-xs text-slate-600 mt-1 leading-relaxed">Esplorazione guidata del suono/silenzio, primo contatto libero con tamburi e bacchette, giochi di imitazione suono/gesto e cerchio del silenzio. Coordinazione pulsazione-respiro.</p>
+                            <div class="mt-2 text-xs bg-amber-50 text-amber-900 p-2 rounded border border-amber-200 font-medium">
+                                <strong>Focus Improvvisazione:</strong> Improvvisazione libera individuale — ogni bambino "presenta" il proprio suono al gruppo classe.
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Classe 2 -->
+                    <div class="flex flex-col sm:flex-row bg-slate-50 rounded-xl border border-slate-200 overflow-hidden shadow-sm">
+                        <div class="bg-brand-500 text-white font-extrabold text-2xl p-4 flex flex-col items-center justify-center sm:w-28 text-center shrink-0">
+                            <span>2ª</span>
+                            <span class="text-xs font-normal uppercase">Classe</span>
+                        </div>
+                        <div class="p-4 flex-1">
+                            <h4 class="font-bold text-brand-700 text-base">Dialogo Ritmico e Dinamiche di Gruppo</h4>
+                            <p class="text-xs text-slate-600 mt-1 leading-relaxed">Pulsazione condivisa, alternanza suono/pausa ed eco ritmica. Dialogo percussivo con rullanti e tom, distinguendo la pulsazione di base dalle frasi ritmiche.</p>
+                            <div class="mt-2 text-xs bg-amber-50 text-amber-900 p-2 rounded border border-amber-200 font-medium">
+                                <strong>Focus Improvvisazione:</strong> Improvvisazione a coppie e sezioni tramite strutture di domanda e risposta (Call & Response).
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Classe 3 -->
+                    <div class="flex flex-col sm:flex-row bg-slate-50 rounded-xl border border-slate-200 overflow-hidden shadow-sm">
+                        <div class="bg-brand-500 text-white font-extrabold text-2xl p-4 flex flex-col items-center justify-center sm:w-28 text-center shrink-0">
+                            <span>3ª</span>
+                            <span class="text-xs font-normal uppercase">Classe</span>
+                        </div>
+                        <div class="p-4 flex-1">
+                            <h4 class="font-bold text-brand-700 text-base">Improvvisazione Guidata ed Incastri Ritmici (Ostinati)</h4>
+                            <p class="text-xs text-slate-600 mt-1 leading-relaxed">Costruzione della "macchina sonora" di classe: sovrapposizione di motivi ostinati. Assegnazione di ruoli differenti (sostegno ritmo base vs variazione timbrica).</p>
+                            <div class="mt-2 text-xs bg-amber-50 text-amber-900 p-2 rounded border border-amber-200 font-medium">
+                                <strong>Focus Improvvisazione:</strong> Improvvisazione a piccoli gruppi su base ritmica (groove) mantenuta dal resto dell'ensemble.
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Classe 4 -->
+                    <div class="flex flex-col sm:flex-row bg-slate-50 rounded-xl border border-slate-200 overflow-hidden shadow-sm">
+                        <div class="bg-brand-500 text-white font-extrabold text-2xl p-4 flex flex-col items-center justify-center sm:w-28 text-center shrink-0">
+                            <span>4ª</span>
+                            <span class="text-xs font-normal uppercase">Classe</span>
+                        </div>
+                        <div class="p-4 flex-1">
+                            <h4 class="font-bold text-brand-700 text-base">Grafia Informale e Sonorizzazione di Storie</h4>
+                            <p class="text-xs text-slate-600 mt-1 leading-relaxed">Transizione dal suono al segno grafico non convenzionale (partiture ad icone e mappe cromatiche). Sonorizzazione di racconti e poesie elaborate con le maestre.</p>
+                            <div class="mt-2 text-xs bg-amber-50 text-amber-900 p-2 rounded border border-amber-200 font-medium">
+                                <strong>Focus Improvvisazione:</strong> Improvvisazione guidata diretta a rotazione da un bambino "direttore" tramite i codici del Sound Painting.
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Classe 5 -->
+                    <div class="flex flex-col sm:flex-row bg-slate-50 rounded-xl border border-slate-200 overflow-hidden shadow-sm">
+                        <div class="bg-brand-500 text-white font-extrabold text-2xl p-4 flex flex-col items-center justify-center sm:w-28 text-center shrink-0">
+                            <span>5ª</span>
+                            <span class="text-xs font-normal uppercase">Classe</span>
+                        </div>
+                        <div class="p-4 flex-1">
+                            <h4 class="font-bold text-brand-700 text-base">Musica d'Insieme e Piccola Orchestra di Percussioni</h4>
+                            <p class="text-xs text-slate-600 mt-1 leading-relaxed">Consolidamento della poliritmia articolata e dell'arrangiamento condiviso. L'ensemble si organizza come un'orchestra di percussioni con sezioni strumentali.</p>
+                            <div class="mt-2 text-xs bg-amber-50 text-amber-900 p-2 rounded border border-amber-200 font-medium">
+                                <strong>Focus Improvvisazione:</strong> L'improvvisazione diviene composizione: le idee estemporanee vengono fissate nel brano originale di classe.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 6. RESTITUZIONE FINALE E MOSTRA SONORA -->
+            <div class="bg-white rounded-xl p-6 sm:p-8 border border-slate-200 shadow-sm space-y-4">
+                <div class="flex items-center space-x-3 text-brand-700 font-bold text-xl border-b border-slate-100 pb-3">
+                    <i class="fa-solid fa-masks-theater text-emerald-600"></i>
+                    <span>6. Restituzione Finale e Condivisione con l'Istituto</span>
+                </div>
+                <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">
+                    Al termine del percorso (in particolar modo nel Modulo B da 18 Ore) è previsto un momento di restituzione finale: una breve performance pubblica o mostra sonora del lavoro svolto, pensata per essere condivisa con le altre classi del plesso, con le famiglie o all'interno delle manifestazioni di fine anno scolastico dell'Istituto. La formula e le modalità saranno concordate con la dirigenza e con il corpo docenti.
+                </p>
+            </div>
+
+            <!-- BIO DOCENTE REFERENTE -->
+            <div class="bg-brand-700 text-white rounded-2xl p-6 sm:p-8 shadow-md">
+                <div class="flex items-center space-x-4 mb-4 pb-4 border-b border-white/20">
+                    <div class="w-14 h-14 rounded-full bg-warm-400 text-brand-700 font-extrabold text-2xl flex items-center justify-center shrink-0">
+                        FF
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-bold">Prof. Fabrizio Fogagnolo</h3>
+                        <p class="text-xs text-amber-300 font-medium">Docente Referente, Pedagogista Musicale & Performer</p>
+                    </div>
+                </div>
+                <p class="text-xs sm:text-sm text-brand-100 leading-relaxed mb-4">
+                    Abilitato statale per le classi di concorso <strong>A063 (Tecnologie Musicali)</strong> e <strong>A030 (Educazione Musicale)</strong>. Docente di Tecnologie Musicali presso il Liceo Musicale "G. Verdi" di Milano, già docente per il corso di <em>Teoria della Percezione Sonora</em> presso il Conservatorio "F. Vittadini" di Pavia. Ampia e consolidata esperienza nei laboratori didattici della Scuola Primaria (Uboldo, Dairago, Inveruno, Villa Cortese).
+                </p>
+                <div class="text-xs bg-white/10 p-3 rounded-lg border border-white/10 flex flex-wrap justify-between gap-2">
+                    <span>📧 fogagnolo.fabrizio@gmail.com</span>
+                    <span>🏛️ Liceo Musicale "G. Verdi" - Milano</span>
+                </div>
+            </div>
+
+        </section>
+
+        <!-- ========================================== -->
+        <!-- TAB 2: GENERATORE DI LEZIONI CON GEMINI LLM -->
+        <!-- ========================================== -->
+        <section id="tab-ai-lesson" class="tab-content hidden space-y-6">
+
+            <div class="bg-white rounded-xl p-6 border border-slate-200 shadow-sm space-y-4">
+                <div class="flex items-center space-x-3 text-brand-700 font-bold text-xl border-b border-slate-100 pb-3">
+                    <i class="fa-solid fa-wand-magic-sparkles text-amber-500"></i>
+                    <span>Generatore Didattico di Moduli & Lezioni AI</span>
+                </div>
+                <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">
+                    Utilizza l'intelligenza artificiale per creare un piano di lavoro dettagliato e personalizzato per la tua classe, basato sui principi pedagogici audiotattili e di improvvisazione del progetto <strong>FIUUMM TATAAM!</strong>.
+                </p>
+
+                <!-- Input Controls -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 pt-2">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 mb-1">Classe Primaria</label>
+                        <select id="lesson-grade" class="w-full text-xs sm:text-sm border border-slate-300 rounded-lg p-2.5 focus:ring-2 focus:ring-brand-500 focus:outline-none bg-white">
+                            <option value="1ª Classe (Percezione, Corporeità e Voce)">1ª Classe (Percezione e Voce)</option>
+                            <option value="2ª Classe (Dialogo Ritmico e Call & Response)">2ª Classe (Dialogo e Call & Response)</option>
+                            <option value="3ª Classe (Ostinati e Macchina Sonora)">3ª Classe (Incastri e Ostinati)</option>
+                            <option value="4ª Classe (Grafia Informale e Sound Painting)">4ª Classe (Partiture ad Icone & Sound Painting)</option>
+                            <option value="5ª Classe (Orchestra di Percussioni e Composizione)">5ª Classe (Orchestra e Composizione)</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 mb-1">Formato Modulo</label>
+                        <select id="lesson-hours" class="w-full text-xs sm:text-sm border border-slate-300 rounded-lg p-2.5 focus:ring-2 focus:ring-brand-500 focus:outline-none bg-white">
+                            <option value="Modulo A (12 Ore complessive)">Modulo A (12 Ore)</option>
+                            <option value="Modulo B (18 Ore complessive)">Modulo B (18 Ore)</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 mb-1">Focus & Esigenze Particolari</label>
+                        <input id="lesson-focus" type="text" placeholder="Es. Inclusione 2 alunni BES, focus su body percussion e cajón" class="w-full text-xs sm:text-sm border border-slate-300 rounded-lg p-2.5 focus:ring-2 focus:ring-brand-500 focus:outline-none">
+                    </div>
+                </div>
+
+                <button onclick="generateAILessonPlan()" id="btn-generate-lesson" class="w-full sm:w-auto bg-brand-700 hover:bg-brand-800 text-white font-semibold text-sm px-6 py-3 rounded-lg shadow-sm transition-colors flex items-center justify-center space-x-2">
+                    <i class="fa-solid fa-gears"></i>
+                    <span>Genera Percorso Didattico Su Misura</span>
+                </button>
+            </div>
+
+            <!-- Loading Spinner -->
+            <div id="lesson-loading" class="hidden bg-white p-8 rounded-xl border border-slate-200 text-center space-y-3">
+                <div class="inline-block animate-spin text-brand-500 text-3xl">
+                    <i class="fa-solid fa-circle-notch"></i>
+                </div>
+                <p class="text-sm font-medium text-slate-700">Elaborazione del piano lezioni con Gemini AI...</p>
+                <p class="text-xs text-slate-400">Applicazione della Teoria delle Musiche Audiotattili e del Capability Approach</p>
+            </div>
+
+            <!-- AI Result Display -->
+            <div id="lesson-result" class="hidden bg-white p-6 sm:p-8 rounded-xl border border-slate-200 shadow-sm space-y-4">
+                <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+                    <h3 class="font-bold text-brand-700 text-lg flex items-center space-x-2">
+                        <i class="fa-solid fa-clipboard-list text-accent-500"></i>
+                        <span>Piano di Lavoro Generato</span>
+                    </h3>
+                    <button onclick="copyToClipboard('lesson-content')" class="text-xs bg-slate-100 hover:bg-slate-200 text-slate-700 px-3 py-1.5 rounded-md font-medium transition-colors flex items-center space-x-1">
+                        <i class="fa-regular fa-copy"></i>
+                        <span>Copia Testo</span>
+                    </button>
+                </div>
+                <div id="lesson-content" class="prose prose-slate max-w-none text-xs sm:text-sm leading-relaxed space-y-4 whitespace-pre-wrap"></div>
+            </div>
+
+        </section>
+
+        <!-- ========================================== -->
+        <!-- TAB 3: STORIE SONORE & NARRATORE VOCALE TTS -->
+        <!-- ========================================== -->
+        <section id="tab-ai-story" class="tab-content hidden space-y-6">
+
+            <div class="bg-white rounded-xl p-6 border border-slate-200 shadow-sm space-y-4">
+                <div class="flex items-center space-x-3 text-brand-700 font-bold text-xl border-b border-slate-100 pb-3">
+                    <i class="fa-solid fa-book-open-reader text-emerald-500"></i>
+                    <span>Generatore di Storie Musicali & Narratore Vocale TTS</span>
+                </div>
+                <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">
+                    Genera un breve racconto o filastrocca per bambini da sonorizzare in classe con tamburi e percussioni, quindi ascolta la narrazione vocale sintetizzata dal modello <strong>Gemini TTS</strong>.
+                </p>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 mb-1">Tema del Racconto / Ambientazione</label>
+                        <input id="story-theme" type="text" value="La foresta dei tamburi magici e il risveglio del gigante" class="w-full text-xs sm:text-sm border border-slate-300 rounded-lg p-2.5 focus:ring-2 focus:ring-brand-500 focus:outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 mb-1">Voce Narrante TTS</label>
+                        <select id="tts-voice" class="w-full text-xs sm:text-sm border border-slate-300 rounded-lg p-2.5 focus:ring-2 focus:ring-brand-500 focus:outline-none bg-white">
+                            <option value="Zephyr">Zephyr (Brillante & Vivace)</option>
+                            <option value="Puck">Puck (Energico & Giocoso)</option>
+                            <option value="Kore">Kore (Chiara & Calda)</option>
+                            <option value="Fenrir">Fenrir (Espressivo & Dinamico)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="flex flex-wrap gap-3">
+                    <button onclick="generateAIStory()" id="btn-generate-story" class="bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-sm px-5 py-2.5 rounded-lg shadow-sm transition-colors flex items-center space-x-2">
+                        <i class="fa-solid fa-pen-sparkles"></i>
+                        <span>1. Genera Storia da Sonorizzare</span>
+                    </button>
+                    <button onclick="generateTTSAudio()" id="btn-generate-tts" class="bg-brand-700 hover:bg-brand-800 text-white font-semibold text-sm px-5 py-2.5 rounded-lg shadow-sm transition-colors flex items-center space-x-2 opacity-50 cursor-not-allowed" disabled>
+                        <i class="fa-solid fa-volume-high"></i>
+                        <span>2. Sincronizza Narrazione Vocale TTS</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Loading Story Spinner -->
+            <div id="story-loading" class="hidden bg-white p-6 rounded-xl border border-slate-200 text-center space-y-2">
+                <div class="inline-block animate-spin text-emerald-500 text-2xl">
+                    <i class="fa-solid fa-circle-notch"></i>
+                </div>
+                <p class="text-xs font-medium text-slate-700">Scrittura del racconto per percussioni in corso...</p>
+            </div>
+
+            <!-- Story Output Box -->
+            <div id="story-result" class="hidden bg-white p-6 rounded-xl border border-slate-200 shadow-sm space-y-4">
+                <h3 class="font-bold text-brand-700 text-base flex items-center justify-between">
+                    <span>📖 Testo del Racconto con Indicazioni di Sonorizzazione</span>
+                    <span class="text-xs font-normal text-slate-400">Pronto per le percussioni</span>
+                </h3>
+                <div id="story-text" class="p-4 bg-slate-50 rounded-lg text-xs sm:text-sm text-slate-700 leading-relaxed font-mono whitespace-pre-wrap border border-slate-200"></div>
+
+                <!-- TTS Audio Player Card -->
+                <div id="tts-audio-card" class="hidden p-4 bg-emerald-50 border border-emerald-200 rounded-xl space-y-3">
+                    <div class="flex items-center space-x-3 text-emerald-800 font-bold text-sm">
+                        <i class="fa-solid fa-circle-play text-xl text-emerald-600"></i>
+                        <span>Audio Narrante Generato da Gemini TTS</span>
+                    </div>
+                    <audio id="tts-player" controls class="w-full"></audio>
+                </div>
+            </div>
+
+        </section>
+
+        <!-- ========================================== -->
+        <!-- TAB 4: PARTITURA GRAFICA & ICONE AI IMAGE   -->
+        <!-- ========================================== -->
+        <section id="tab-ai-score" class="tab-content hidden space-y-6">
+
+            <div class="bg-white rounded-xl p-6 border border-slate-200 shadow-sm space-y-4">
+                <div class="flex items-center space-x-3 text-brand-700 font-bold text-xl border-b border-slate-100 pb-3">
+                    <i class="fa-solid fa-icons text-pink-500"></i>
+                    <span>Generatore di Partiture Informali & Carte Ritmiche AI</span>
+                </div>
+                <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">
+                    Crea illustrazioni grafiche non convenzionali e partiture ad icone per guidare la sonorizzazione o la conduzione con il <strong>Sound Painting</strong> nelle classi 4ª e 5ª.
+                </p>
+
+                <div class="space-y-3">
+                    <label class="block text-xs font-semibold text-slate-700">Descrizione dell'Icona / Scheda Grafica</label>
+                    <input id="score-prompt" type="text" value="Una scheda didattica colorata con simboli ritmici informali: un fulmine per colpo forte di rullante, nuvole per maracas e onde per tamburo djembe" class="w-full text-xs sm:text-sm border border-slate-300 rounded-lg p-2.5 focus:ring-2 focus:ring-brand-500 focus:outline-none">
+                </div>
+
+                <button onclick="generateAIScoreImage()" id="btn-generate-image" class="bg-pink-600 hover:bg-pink-700 text-white font-semibold text-sm px-6 py-2.5 rounded-lg shadow-sm transition-colors flex items-center space-x-2">
+                    <i class="fa-solid fa-image"></i>
+                    <span>Genera Immagine Partitura Informale</span>
+                </button>
+            </div>
+
+            <!-- Image Generation Loading Spinner -->
+            <div id="image-loading" class="hidden bg-white p-8 rounded-xl border border-slate-200 text-center space-y-3">
+                <div class="inline-block animate-spin text-pink-500 text-3xl">
+                    <i class="fa-solid fa-circle-notch"></i>
+                </div>
+                <p class="text-sm font-medium text-slate-700">Generazione dell'opera grafica con Gemini Image Model...</p>
+                <p class="text-xs text-slate-400">Creazione di icone non convenzionali per la didattica musicale</p>
+            </div>
+
+            <!-- Image Output Display -->
+            <div id="image-result" class="hidden bg-white p-6 rounded-xl border border-slate-200 shadow-sm text-center space-y-4">
+                <h3 class="font-bold text-brand-700 text-base text-left">🎨 Partitura Grafica Generata</h3>
+                <div class="flex justify-center">
+                    <img id="score-image-display" src="" alt="Partitura Grafica AI" class="max-w-full max-h-[500px] rounded-xl shadow-md border border-slate-200 object-contain">
+                </div>
+            </div>
+
+        </section>
+
+        <!-- ========================================== -->
+        <!-- TAB 5: VIRTUAL PERCUSSION CONSOLE (WEB AUDIO) -->
+        <!-- ========================================== -->
+        <section id="tab-virtual-pads" class="tab-content hidden space-y-6">
+
+            <div class="bg-white rounded-xl p-6 border border-slate-200 shadow-sm space-y-4">
+                <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+                    <div class="flex items-center space-x-3 text-brand-700 font-bold text-xl">
+                        <i class="fa-solid fa-drum text-accent-500"></i>
+                        <span>Console Virtuale Percussioni Acustiche</span>
+                    </div>
+                    <span class="text-xs font-semibold px-2.5 py-1 bg-emerald-100 text-emerald-800 rounded-full">Sintesi Web Audio API</span>
+                </div>
+                <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">
+                    Sperimenta direttamente nel browser i timbri dello strumentario fornito nel laboratorio <strong>FIUUMM TATAAM!</strong>. Clicca sui pad o utilizza la tastiera del computer.
+                </p>
+
+                <!-- Pads Grid -->
+                <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-3 pt-2">
+                    <!-- Pad 1: Rullante -->
+                    <button onclick="playDrumSound('snare')" class="p-4 bg-slate-800 hover:bg-slate-700 active:scale-95 text-white rounded-xl shadow flex flex-col items-center justify-center space-y-2 transition-transform">
+                        <span class="text-2xl">🥁</span>
+                        <span class="font-bold text-xs">Rullante</span>
+                        <span class="text-[10px] text-slate-400 font-mono">[ Tasto A ]</span>
+                    </button>
+
+                    <!-- Pad 2: Bass Tom -->
+                    <button onclick="playDrumSound('tom')" class="p-4 bg-brand-700 hover:bg-brand-600 active:scale-95 text-white rounded-xl shadow flex flex-col items-center justify-center space-y-2 transition-transform">
+                        <span class="text-2xl">🪘</span>
+                        <span class="font-bold text-xs">Timpano / Tom</span>
+                        <span class="text-[10px] text-brand-200 font-mono">[ Tasto S ]</span>
+                    </button>
+
+                    <!-- Pad 3: Djembe -->
+                    <button onclick="playDrumSound('djembe')" class="p-4 bg-warm-500 hover:bg-amber-600 active:scale-95 text-white rounded-xl shadow flex flex-col items-center justify-center space-y-2 transition-transform">
+                        <span class="text-2xl">🪵</span>
+                        <span class="font-bold text-xs">Djembé</span>
+                        <span class="text-[10px] text-amber-100 font-mono">[ Tasto D ]</span>
+                    </button>
+
+                    <!-- Pad 4: Cajon -->
+                    <button onclick="playDrumSound('cajon')" class="p-4 bg-amber-800 hover:bg-amber-700 active:scale-95 text-white rounded-xl shadow flex flex-col items-center justify-center space-y-2 transition-transform">
+                        <span class="text-2xl">📦</span>
+                        <span class="font-bold text-xs">Cajón</span>
+                        <span class="text-[10px] text-amber-200 font-mono">[ Tasto F ]</span>
+                    </button>
+
+                    <!-- Pad 5: Claves -->
+                    <button onclick="playDrumSound('claves')" class="p-4 bg-accent-500 hover:bg-accent-600 active:scale-95 text-white rounded-xl shadow flex flex-col items-center justify-center space-y-2 transition-transform">
+                        <span class="text-2xl">🥢</span>
+                        <span class="font-bold text-xs">Claves</span>
+                        <span class="text-[10px] text-red-100 font-mono">[ Tasto G ]</span>
+                    </button>
+
+                    <!-- Pad 6: Shaker -->
+                    <button onclick="playDrumSound('shaker')" class="p-4 bg-emerald-700 hover:bg-emerald-600 active:scale-95 text-white rounded-xl shadow flex flex-col items-center justify-center space-y-2 transition-transform">
+                        <span class="text-2xl">🧂</span>
+                        <span class="font-bold text-xs">Shaker</span>
+                        <span class="text-[10px] text-emerald-200 font-mono">[ Tasto H ]</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Rhythm Loop Metronome / Exercise Generator -->
+            <div class="bg-white rounded-xl p-6 border border-slate-200 shadow-sm space-y-4">
+                <h4 class="font-bold text-brand-700 text-sm flex items-center space-x-2">
+                    <i class="fa-solid fa-stopwatch text-accent-500"></i>
+                    <span>Esercitatore di Pulsazione & Pattern</span>
+                </h4>
+                <div class="flex items-center space-x-4">
+                    <button onclick="toggleMetronome()" id="btn-metronome" class="bg-slate-800 hover:bg-slate-900 text-white text-xs font-bold px-4 py-2 rounded-lg transition-colors flex items-center space-x-2">
+                        <i class="fa-solid fa-play" id="metro-icon"></i>
+                        <span id="metro-text">Avvia Pulsazione 90 BPM</span>
+                    </button>
+                    <span class="text-xs text-slate-500">Mantiene la pulsazione costante per il cerchio ritmico della classe</span>
+                </div>
+            </div>
+
+        </section>
+
+    </main>
+
+    <script>
+        // Global variables & state
+        let audioCtx = null;
+        let metronomeInterval = null;
+        let isMetronomeRunning = false;
+        let generatedStoryContent = "";
+
+        // API Key handles runtime execution in Canvas automatically
+        const apiKey = "";
+
+        // UI Notification Handler
+        function showMessage(type, text) {
+            const box = document.getElementById('message-box');
+            const icon = document.getElementById('message-icon');
+            const msgText = document.getElementById('message-text');
+
+            box.classList.remove('hidden', 'bg-red-50', 'border-red-200', 'text-red-800', 'bg-emerald-50', 'border-emerald-200', 'text-emerald-800', 'bg-amber-50', 'border-amber-200', 'text-amber-800');
+
+            if (type === 'error') {
+                box.classList.add('bg-red-50', 'border-red-200', 'text-red-800');
+                icon.className = 'fa-solid fa-triangle-exclamation text-red-600';
+            } else if (type === 'success') {
+                box.classList.add('bg-emerald-50', 'border-emerald-200', 'text-emerald-800');
+                icon.className = 'fa-solid fa-circle-check text-emerald-600';
+            } else {
+                box.classList.add('bg-amber-50', 'border-amber-200', 'text-amber-800');
+                icon.className = 'fa-solid fa-circle-info text-amber-600';
+            }
+
+            msgText.innerText = text;
+        }
+
+        function closeMessageBox() {
+            document.getElementById('message-box').classList.add('hidden');
+        }
+
+        // Tab Switching Logic
+        function switchTab(tabId) {
+            const tabs = document.querySelectorAll('.tab-content');
+            tabs.forEach(t => t.classList.add('hidden'));
+            
+            const selectedTab = document.getElementById('tab-' + tabId);
+            if (selectedTab) selectedTab.classList.remove('hidden');
+
+            const tabBtns = document.querySelectorAll('.tab-btn');
+            tabBtns.forEach(btn => {
+                btn.classList.remove('bg-brand-800', 'text-white', 'border', 'border-brand-500');
+                btn.classList.add('text-brand-100');
+            });
+
+            const activeBtn = document.getElementById('tab-btn-' + tabId);
+            if (activeBtn) {
+                activeBtn.classList.add('bg-brand-800', 'text-white', 'border', 'border-brand-500');
+                activeBtn.classList.remove('text-brand-100');
+            }
+        }
+
+        // Clipboard Copy Helper
+        function copyToClipboard(elementId) {
+            const text = document.getElementById(elementId).innerText;
+            const textarea = document.createElement('textarea');
+            textarea.value = text;
+            document.body.appendChild(textarea);
+            textarea.select();
+            document.execCommand('copy');
+            document.body.removeChild(textarea);
+            showMessage('success', 'Testo copiato negli appunti con successo!');
+        }
+
+        // Exponential backoff fetch wrapper
+        async function fetchWithBackoff(url, options, maxRetries = 3) {
+            let delay = 1000;
+            for (let i = 0; i < maxRetries; i++) {
+                try {
+                    const response = await fetch(url, options);
+                    if (response.status === 429) {
+                        await new Promise(res => setTimeout(res, delay));
+                        delay *= 2;
+                        continue;
+                    }
+                    return response;
+                } catch (err) {
+                    if (i === maxRetries - 1) throw err;
+                    await new Promise(res => setTimeout(res, delay));
+                    delay *= 2;
+                }
+            }
+        }
+
+        // 1. GEMINI API: Lesson Plan Generator
+        async function generateAILessonPlan() {
+            const grade = document.getElementById('lesson-grade').value;
+            const hours = document.getElementById('lesson-hours').value;
+            const focus = document.getElementById('lesson-focus').value || "Inclusione e poliritmia generale";
+
+            const resultContainer = document.getElementById('lesson-result');
+            const loadingContainer = document.getElementById('lesson-loading');
+            const contentDisplay = document.getElementById('lesson-content');
+
+            resultContainer.classList.add('hidden');
+            loadingContainer.classList.remove('hidden');
+
+            const systemPrompt = `Sei un esperto pedagogista musicale accreditato IJVAS (Il Jazz Va a Scuola) e specializzato nella Teoria delle Musiche Audiotattili (Prof. Caporaletti) e nel Capability Approach per la Scuola Primaria. Il tuo compito è progettare un piano laboratoriale operativo per il progetto "FIUUMM TATAAM!". Usa un tono professionale, chiaro e stimolante per gli insegnanti.`;
+
+            const userPrompt = `Crea un piano di lavoro dettagliato e articolato per il laboratorio musicale "FIUUMM TATAAM!":
+- Classe: ${grade}
+- Modulo: ${hours}
+- Focus / Esigenze: ${focus}
+
+Struttura la risposta nei seguenti punti chiari:
+1. Obiettivi pedagogici prioritari (ascolto, poliritmia, inclusione)
+2. Articolazione degli incontri (Fase 1 Accoglienza corporea, Fase 2 Improvvisazione e Sound Painting, Fase 3 Restituzione)
+3. Strumentario utilizzato (rullanti, tom, cajón, djembé, body percussion) e compiti pratici
+4. Strategia di inclusione specifica per alunni BES/DSA/NAI (senza notazione tradizionale)
+5. Esercizio pratico guidato di "Call & Response" da fare in classe.`;
+
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${apiKey}`;
+
+            const payload = {
+                contents: [{ parts: [{ text: userPrompt }] }],
+                systemInstruction: { parts: [{ text: systemPrompt }] }
+            };
+
+            try {
+                const response = await fetchWithBackoff(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                const data = await response.json();
+                const generatedText = data.candidates?.[0]?.content?.parts?.[0]?.text;
+
+                if (generatedText) {
+                    contentDisplay.innerText = generatedText;
+                    loadingContainer.classList.add('hidden');
+                    resultContainer.classList.remove('hidden');
+                } else {
+                    throw new Error("Risposta vuota dall'API Gemini");
+                }
+            } catch (err) {
+                loadingContainer.classList.add('hidden');
+                showMessage('error', 'Impossibile generare il piano lezioni. Riprova tra poco.');
+                console.error(err);
+            }
+        }
+
+        // 2. GEMINI API: Story & TTS Audio Generator
+        async function generateAIStory() {
+            const theme = document.getElementById('story-theme').value || "La festa dei tamburi nella foresta";
+            const loadingContainer = document.getElementById('story-loading');
+            const resultContainer = document.getElementById('story-result');
+            const textDisplay = document.getElementById('story-text');
+            const btnTTS = document.getElementById('btn-generate-tts');
+
+            resultContainer.classList.add('hidden');
+            loadingContainer.classList.remove('hidden');
+
+            const systemPrompt = "Sei un autore di storie educative e filastrocche ritmiche per bambini della scuola primaria, pensate per essere sonorizzate con tamburi, battenti e percussioni.";
+            const userPrompt = `Scrivi un breve racconto (circa 120-150 parole) su questo tema: "${theme}". 
+Inserisci tra parentesi quadre delle chiare indicazioni di sonorizzazione ritmica per i bambini (es: [SUONA IL RULLANTE PIANO], [COLPO DI CAJON FUORTE], [SHAKER LEGGERO]).`;
+
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${apiKey}`;
+
+            try {
+                const response = await fetchWithBackoff(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        contents: [{ parts: [{ text: userPrompt }] }],
+                        systemInstruction: { parts: [{ text: systemPrompt }] }
+                    })
+                });
+
+                const data = await response.json();
+                const text = data.candidates?.[0]?.content?.parts?.[0]?.text;
+
+                if (text) {
+                    generatedStoryContent = text;
+                    textDisplay.innerText = text;
+                    loadingContainer.classList.add('hidden');
+                    resultContainer.classList.remove('hidden');
+                    btnTTS.disabled = false;
+                    btnTTS.classList.remove('opacity-50', 'cursor-not-allowed');
+                } else {
+                    throw new Error("Impossibile generare il testo della storia");
+                }
+            } catch (err) {
+                loadingContainer.classList.add('hidden');
+                showMessage('error', 'Errore nella generazione del racconto.');
+                console.error(err);
+            }
+        }
+
+        // TTS PCM to WAV helper
+        function pcmToWav(pcm16, sampleRate = 24000) {
+            const numChannels = 1;
+            const bytesPerSample = 2;
+            const blockAlign = numChannels * bytesPerSample;
+            const byteRate = sampleRate * blockAlign;
+            const dataSize = pcm16.length * bytesPerSample;
+            const buffer = new ArrayBuffer(44 + dataSize);
+            const view = new DataView(buffer);
+
+            const writeString = (v, offset, str) => {
+                for (let i = 0; i < str.length; i++) v.setUint8(offset + i, str.charCodeAt(i));
+            };
+
+            writeString(view, 0, 'RIFF');
+            view.setUint32(4, 36 + dataSize, true);
+            writeString(view, 8, 'WAVE');
+            writeString(view, 12, 'fmt ');
+            view.setUint32(16, 16, true);
+            view.setUint16(20, 1, true);
+            view.setUint16(22, numChannels, true);
+            view.setUint32(24, sampleRate, true);
+            view.setUint32(28, byteRate, true);
+            view.setUint16(32, blockAlign, true);
+            view.setUint16(34, 16, true);
+            writeString(view, 36, 'data');
+            view.setUint32(40, dataSize, true);
+
+            let offset = 44;
+            for (let i = 0; i < pcm16.length; i++, offset += 2) {
+                view.setInt16(offset, pcm16[i], true);
+            }
+
+            return new Blob([buffer], { type: 'audio/wav' });
+        }
+
+        async function generateTTSAudio() {
+            if (!generatedStoryContent) return;
+            const voiceName = document.getElementById('tts-voice').value;
+            const playerCard = document.getElementById('tts-audio-card');
+            const player = document.getElementById('tts-player');
+
+            showMessage('info', 'Sintesi vocale in corso con Gemini TTS...');
+
+            // Clean text from bracketed annotations for narration
+            const cleanText = generatedStoryContent.replace(/\[.*?\]/g, '');
+
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-tts:generateContent?key=${apiKey}`;
+
+            const payload = {
+                contents: [{ parts: [{ text: `Leggi con tono espressivo per bambini: ${cleanText}` }] }],
+                generationConfig: {
+                    responseModalities: ["AUDIO"],
+                    speechConfig: {
+                        voiceConfig: {
+                            prebuiltVoiceConfig: { voiceName: voiceName }
+                        }
+                    }
+                }
+            };
+
+            try {
+                const response = await fetchWithBackoff(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                const data = await response.json();
+                const inlinePart = data.candidates?.[0]?.content?.parts?.[0]?.inlineData;
+
+                if (inlinePart && inlinePart.data) {
+                    const base64Audio = inlinePart.data;
+                    const mimeType = inlinePart.mimeType || "audio/L16;rate=24000";
+                    const rateMatch = mimeType.match(/rate=(\d+)/);
+                    const sampleRate = rateMatch ? parseInt(rateMatch[1], 10) : 24000;
+
+                    const binaryString = atob(base64Audio);
+                    const len = binaryString.length;
+                    const bytes = new Uint8Array(len);
+                    for (let i = 0; i < len; i++) bytes[i] = binaryString.charCodeAt(i);
+
+                    const pcm16 = new Int16Array(bytes.buffer);
+                    const wavBlob = pcmToWav(pcm16, sampleRate);
+                    const audioUrl = URL.createObjectURL(wavBlob);
+
+                    player.src = audioUrl;
+                    playerCard.classList.remove('hidden');
+                    player.play();
+                    showMessage('success', 'Narrazione audio sintetizzata con successo!');
+                } else {
+                    throw new Error("Dati audio mancanti nella risposta TTS");
+                }
+            } catch (err) {
+                showMessage('error', 'Errore nella generazione della voce TTS.');
+                console.error(err);
+            }
+        }
+
+        // 3. GEMINI API: Graphic Score Image Generator
+        async function generateAIScoreImage() {
+            const prompt = document.getElementById('score-prompt').value;
+            const loadingContainer = document.getElementById('image-loading');
+            const resultContainer = document.getElementById('image-result');
+            const imageDisplay = document.getElementById('score-image-display');
+
+            resultContainer.classList.add('hidden');
+            loadingContainer.classList.remove('hidden');
+
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-flash-lite-image:generateContent?key=${apiKey}`;
+
+            const payload = {
+                contents: [{ parts: [{ text: prompt }] }],
+                generationConfig: {
+                    responseModalities: ['TEXT', 'IMAGE']
+                }
+            };
+
+            try {
+                const response = await fetchWithBackoff(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                const data = await response.json();
+                const imagePart = data?.candidates?.[0]?.content?.parts?.find(p => p.inlineData);
+
+                if (imagePart && imagePart.inlineData) {
+                    const base64Data = imagePart.inlineData.data;
+                    const mimeType = imagePart.inlineData.mimeType || 'image/png';
+                    imageDisplay.src = `data:${mimeType};base64,${base64Data}`;
+
+                    loadingContainer.classList.add('hidden');
+                    resultContainer.classList.remove('hidden');
+                } else {
+                    throw new Error("Nessuna immagine restituita dall'API");
+                }
+            } catch (err) {
+                loadingContainer.classList.add('hidden');
+                showMessage('error', 'Impossibile generare l\'immagine della partitura.');
+                console.error(err);
+            }
+        }
+
+        // 4. WEB AUDIO SYNTHESIZER FOR PERCUSSION PADS
+        function initAudioContext() {
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+        }
+
+        function playDrumSound(type) {
+            initAudioContext();
+            const now = audioCtx.currentTime;
+
+            if (type === 'snare') {
+                // Snare: Tone + Noise
+                const osc = audioCtx.createOscillator();
+                const gainOsc = audioCtx.createGain();
+                osc.type = 'triangle';
+                osc.frequency.setValueAtTime(180, now);
+                osc.frequency.exponentialRampToValueAtTime(40, now + 0.15);
+                gainOsc.gain.setValueAtTime(0.7, now);
+                gainOsc.gain.exponentialRampToValueAtTime(0.01, now + 0.15);
+                osc.connect(gainOsc);
+                gainOsc.connect(audioCtx.destination);
+                osc.start(now);
+                osc.stop(now + 0.15);
+
+                // Noise buffer for snare wires
+                const bufferSize = audioCtx.sampleRate * 0.2;
+                const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+                const data = buffer.getChannelData(0);
+                for (let i = 0; i < bufferSize; i++) data[i] = Math.random() * 2 - 1;
+                const noise = audioCtx.createBufferSource();
+                noise.buffer = buffer;
+                const gainNoise = audioCtx.createGain();
+                gainNoise.gain.setValueAtTime(0.4, now);
+                gainNoise.gain.exponentialRampToValueAtTime(0.01, now + 0.2);
+                noise.connect(gainNoise);
+                gainNoise.connect(audioCtx.destination);
+                noise.start(now);
+            } else if (type === 'tom') {
+                // Timpano / Tom Low pitch
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.frequency.setValueAtTime(140, now);
+                osc.frequency.exponentialRampToValueAtTime(50, now + 0.3);
+                gain.gain.setValueAtTime(0.9, now);
+                gain.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start(now);
+                osc.stop(now + 0.3);
+            } else if (type === 'djembe') {
+                // Djembe Open Tone
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(220, now);
+                osc.frequency.exponentialRampToValueAtTime(80, now + 0.25);
+                gain.gain.setValueAtTime(0.8, now);
+                gain.gain.exponentialRampToValueAtTime(0.01, now + 0.25);
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start(now);
+                osc.stop(now + 0.25);
+            } else if (type === 'cajon') {
+                // Cajon Low slap
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.frequency.setValueAtTime(100, now);
+                osc.frequency.exponentialRampToValueAtTime(30, now + 0.2);
+                gain.gain.setValueAtTime(1.0, now);
+                gain.gain.exponentialRampToValueAtTime(0.01, now + 0.2);
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start(now);
+                osc.stop(now + 0.2);
+            } else if (type === 'claves') {
+                // Claves high wooden ping
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(2200, now);
+                gain.gain.setValueAtTime(0.6, now);
+                gain.gain.exponentialRampToValueAtTime(0.01, now + 0.08);
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start(now);
+                osc.stop(now + 0.08);
+            } else if (type === 'shaker') {
+                // Shaker short noise
+                const bufferSize = audioCtx.sampleRate * 0.08;
+                const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+                const data = buffer.getChannelData(0);
+                for (let i = 0; i < bufferSize; i++) data[i] = Math.random() * 2 - 1;
+                const noise = audioCtx.createBufferSource();
+                noise.buffer = buffer;
+                const gain = audioCtx.createGain();
+                gain.gain.setValueAtTime(0.3, now);
+                gain.gain.exponentialRampToValueAtTime(0.01, now + 0.08);
+                noise.connect(gain);
+                gain.connect(audioCtx.destination);
+                noise.start(now);
+            }
+        }
+
+        // Metronome Loop
+        function toggleMetronome() {
+            initAudioContext();
+            const btnText = document.getElementById('metro-text');
+            const btnIcon = document.getElementById('metro-icon');
+
+            if (isMetronomeRunning) {
+                clearInterval(metronomeInterval);
+                isMetronomeRunning = false;
+                btnText.innerText = "Avvia Pulsazione 90 BPM";
+                btnIcon.className = "fa-solid fa-play";
+            } else {
+                isMetronomeRunning = true;
+                btnText.innerText = "Fermare Pulsazione";
+                btnIcon.className = "fa-solid fa-pause";
+                
+                playDrumSound('claves');
+                metronomeInterval = setInterval(() => {
+                    playDrumSound('claves');
+                }, (60 / 90) * 1000); // 90 BPM
+            }
+        }
+
+        // Keyboard triggers for drum pads
+        window.addEventListener('keydown', (e) => {
+            const key = e.key.toLowerCase();
+            if (key === 'a') playDrumSound('snare');
+            if (key === 's') playDrumSound('tom');
+            if (key === 'd') playDrumSound('djembe');
+            if (key === 'f') playDrumSound('cajon');
+            if (key === 'g') playDrumSound('claves');
+            if (key === 'h') playDrumSound('shaker');
+        });
+    </script>
+</body>
+</html>
